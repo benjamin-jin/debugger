@@ -1,21 +1,18 @@
-# debugger
-Enable / Disable `print` for global level
+# Python Debugger
+When developping programs in Python, you may use `print` for debug your program. However, when to release your program you need to delete those `print` lines.
 
-# Usage Example
-```python3
-debug.debug("HI")             # "HI" is printed
-debug.setLevels("info")       # set debugLevel as INFO
-debug.debug("HI")             # "HI" is not printed
+With this debugger, you do not need to remove all the debug lines.
+```
+setLevel("debug")
+debug("hi")         # hi printed out
+
+setLevel("info")
+debug("hi")         # hi does not print out
 ```
 
-# Debug levels
-> quiet : Do not print except `error`
+# Debug Levels
+- quite   : Does not print anything except error
+- info    : Print `info` and `error`
+- verobse : print `info`, `warn` and `error`
+- debug   : print `debug`, `info`, `warn` and `error`
 
-> info : Print only `error` and `info` message
-
-> verbose : Print only `error`, `info`, `warn` message
-
-> debug : Print only `error`, `info` `warn`, `debug` message
-
-# Syntax Sugar for `debug`
-You may not need type `debug.debug(message)` for print `debug-level` message. Just write `debug(message)`.
