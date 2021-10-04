@@ -1,7 +1,8 @@
 import datetime
 import inspect
-from sys import prefix
 import traceback
+
+
 # API for _colors
 def _helper(value) -> str:
   return f"\033[{value}m"
