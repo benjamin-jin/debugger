@@ -1,64 +1,67 @@
 import datetime
 import inspect
 import traceback
+import json
+import os
+from colors import *
 
-
-# API for _colors
-def _helper(value) -> str:
-  return f"\033[{value}m"
-
-def addColor(name : str, value : str) -> None:
-  global _colors
-  if (value.startswith("\033")):
-    _colors[name] = value
-  else:
-    _colors[name] = _helper(value)
-  return name
-
-_colors = {
-  "RESET"       : _helper(0),
-  "BOLD"        : _helper(1),
-  "UNDERLINE"   : _helper(4),
-  "RED"         : _helper(91),
-  "GREEN"       : _helper(92),
-  "YELLOW"      : _helper(93),
-  "BLUE"        : _helper(94),
-  "PURPLE"      : _helper(95),
-  "CYAN"        : _helper(96)
-}
-
-# API for debug level
 _debugLevels = ["quiet","info","verbose", "debug"]
 _currentLevel = "debug"
 def setLevel(level : str) -> None:
   global _currentLevel
   if level in _debugLevels:
     _currentLevel = level
-
 # API for debug print color
+
 _data = {
   "INFO" : {
-    "_colors" : "GREEN",
+    "ansi" : {
+      "fg" : "GREEN",
+      "bg" : "",
+      "style" : []
+    },
     "prefixes" : ["{inspect}"],
     "postfixes" : []
   },
   "WARN" : {
-    "_colors" : "YELLOW",
+    "ansi" : {
+      "fg" : "YELLOW",
+      "bg" : "",
+      "style" : []
+    },
     "prefixes" : ["{inspect}"],
     "postfixes" : []
   },
   "ERROR" : {
-    "_colors" : "RED",
+    "ansi" : {
+      "fg" : "RED",
+      "bg" : "",
+      "style" : []
+    },
     "prefixes" : [],
     "postfixes" : ["{trace}"]
   },
   "DEBUG" : {
-    "_colors" : "BLUE",
-    "prefixes" : ["{inspect}"],
+    "ansi" : {
+      "fg" : "BLUE",
+      "bg" : "",
+      "style" : []
+    },
+    "prefixes" : [],
     "postfixes" : []
   }
 }
-
+def saveConfigure(path : str = ".debug-setting.json") -> None:
+  print(_data["DEBUG"]["prefixes"])
+  with open(path, "w") as f:
+    json.dump(_data, f, indent=4)
+def loadConfigure(path : str = ".debug-setting.json") -> None:
+  if os.path.isfile(path):
+    with open(path) as f:
+      data = json.load(f)
+    for each in data:
+      _data[each] = data[each]
+# loadConfigure()
 def setColorMap(input1, input2 = None):
   if type(input1) == dict:
     for each in input1.keys():
@@ -119,9 +122,10 @@ def printHelper(level : str, text : str) -> None:
   messageFormat = [x for x in [" ".join(prefixed), text, " ".join(postfixed)] if x != ""]
   message = ": ".join(messageFormat)
   frame = inspect.getframeinfo(inspect.currentframe().f_back.f_back)
-  message = message.replace("{level}", level.upper()).replace("{time}", str(datetime.datetime.now())).replace("{inspect}", "In {} line {}".format(frame.filename,frame.lineno))
+  message = message.replace("{level}", level.upper()).replace("{time}", str(datetime.datetime.now())).replace("{inspect}", "{}:{}".format(frame.filename,frame.lineno))
   message = message.replace("{trace}", traceback.format_exc())
-  print(_colors[_data[level.upper()]["_colors"].upper()] + message + _colors["RESET"])
+  print(color(message, bg=_data[level.upper()]["ansi"]["bg"].lower(), style="+".join(_data[level.upper()]["ansi"]["style"]).lower(),fg=_data[level.upper()]["ansi"]["fg"].lower()))
+  # print(_colors[_data[level.upper()]["_colors"].upper()] + message + _colors["RESET"])
 # into string
 def intoString(args) -> str:
   converted = []
