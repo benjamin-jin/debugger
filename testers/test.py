@@ -2,9 +2,9 @@
 import sys
 import os
 
-sys.path.insert(0, f"{os.path.dirname(__file__)}/..")
+# sys.path.insert(0, f"{os.path.dirname(__file__)}/..")
+# from printDebugging import *
 from printDebugging import *
-
 def do_print():
   debug(f"DEBUG-{getLevel()}")
   info(f"INFO-{getLevel()}")
@@ -73,3 +73,9 @@ do_print()
 # print(getLevel())
 # debug("?")
 # # error("?")
+import traceback
+set_postfixes(traceback.format_exc, ERROR)
+try:
+  0 / 0
+except:
+  error("Expected")
