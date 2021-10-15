@@ -1,0 +1,46 @@
+{
+    "INFO": {
+        "ansi": {
+            "fg": "GREEN",
+            "bg": "",
+            "style": []
+        },
+        "prefixes": [
+            "{inspect}"
+        ],
+        "postfixes": []
+    },
+    "WARN": {
+        "ansi": {
+            "fg": "YELLOW",
+            "bg": "",
+            "style": []
+        },
+        "prefixes": [
+            "{inspect}"
+        ],
+        "postfixes": []
+    },
+    "ERROR": {
+        "ansi": {
+            "fg": "RED",
+            "bg": "",
+            "style": []
+        },
+        "prefixes": [
+            "{inspect}"
+        ],
+        "postfixes": []
+    },
+    "DEBUG": {
+        "ansi": {
+            "fg": "BLUE",
+            "bg": "",
+            "style": []
+        },
+        "prefixes": [
+            "{inspect}"
+        ],
+        "postfixes": []
+    }
+}
