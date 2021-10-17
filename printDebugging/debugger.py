@@ -279,6 +279,80 @@ def warn(*args) -> None:
     printHelper(intoString(args))
 def info(*args) -> None:
     printHelper(intoString(args))
+class Wrapper:
+  def __init__(self, clazz):
+    self.clazz = clazz
+  def __repr__(self):
+    return self.clazz.__repr__()
+  def __str__(self):
+    return self.clazz.__str__()
+  def __code__(self):
+    return self.clazz.__code__()
+  def __getattr__(self, key):
+    return debugging(getattr(self.clazz, key))
+def helper(t):
+  tpe = str(t).split(" ")[-1].replace(">","").replace("'","")
+  return "-type : {}\t-value : {}".format(tpe, t)
+
+def debugging(f):
+  if inspect.isfunction(f):
+    f.__module__
+    def func(*args, **kwargs):
+      emptyArgs   = True if args == tuple() else False
+      emptyKwargs = True if kwargs == dict() else False
+      message = f"{f.__name__}"
+      if not emptyArgs or not emptyKwargs:
+        message += " inputs\n"
+      else:
+        message += " has no input"
+      if not emptyArgs:
+        argsMsg = []
+        for each in args:
+          argsMsg.append(helper(each))
+        message += "\n".join(argsMsg)
+
+      if not emptyKwargs:
+        argsMsg = []
+        for each in kwargs.keys():
+          argsMsg.append(each + " " + helper(kwargs[each]))
+        message += "\n".join(argsMsg)
+      answer = f(*args, **kwargs)
+      debug(message)
+      debug(f"{f.__name__} output:\n{helper(answer)}")
+      return answer
+    return func
+  elif inspect.isclass(f):
+    def func(*args, **kwargs):
+      answer = f(*args, **kwargs)
+      return Wrapper(answer)
+    return func
+  elif inspect.ismethod(f):
+    def func(*args, **kwargs):
+      emptyArgs   = True if args == tuple() else False
+      emptyKwargs = True if kwargs == dict() else False
+      message = f"{f.__qualname__}"
+      if not emptyArgs and not emptyKwargs:
+        message += " inputs\n"
+      else:
+        message += " has no input"
+      if not emptyArgs:
+        argsMsg = []
+        for each in args:
+          argsMsg.append(helper(each))
+        message += "\n".join(argsMsg)
+
+      if not emptyKwargs:
+        argsMsg = []
+        for each in kwargs.keys():
+          argsMsg.append(each + " " + helper(kwargs[each]))
+        message += "\n".join(argsMsg)
+      answer = f(*args, **kwargs)
+      debug(message)
+      debug(f"{f.__qualname__} output:\n{helper(answer)}")
+      return answer
+    return func
+  else:
+    return f
 
 # #   def test(cls, target = True, expected = None, method = "==", text: str = ""):
 # #     if type(target) != bool and expected != None:

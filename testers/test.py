@@ -2,7 +2,11 @@
 import sys
 import os
 
-# sys.path.insert(0, f"{os.path.dirname(__file__)}/..")
+# from testers.test import debugging
+
+# from testers.test import debugging
+
+sys.path.insert(0, f"{os.path.dirname(__file__)}/..")
 # from printDebugging import *
 from printDebugging import *
 def do_print():
@@ -74,8 +78,33 @@ do_print()
 # debug("?")
 # # error("?")
 import traceback
-set_postfixes(traceback.format_exc, ERROR)
-try:
-  0 / 0
-except:
-  error("Expected")
+# set_postfixes(traceback.format_exc, ERROR)
+# try:
+#   0 / 0
+# except:
+#   error("Expected")
+
+# @debugging
+class MyClass:
+  def test(self):
+    return 3
+  def test1(self,x):
+    return x
+  def test2(self,x, y):
+    return 3
+  def mymethod(self, x):
+    return 3
+x = MyClass()
+x.test()
+x.test1(3)
+x.test2(y=3,x=4)
+x.mymethod(3)
+@debugging
+class MyClass2(MyClass):
+  pass
+x = MyClass2()
+x.test()
+x.test1(3)
+setLevel("QUIET")
+x.test2(y=3,x=4)
+x.mymethod(3)
