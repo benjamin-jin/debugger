@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='print_debugging',
-      version='0.0.1',
+      version='0.0.2',
       url=' https://github.com/benjamin-jin/debugger',
       author='Benjamin Jin',
       author_email='jinrudals135@naver.com',
